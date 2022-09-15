@@ -21,7 +21,7 @@ public:
             q1.pop();
         }else{
             ret = q2.back();
-            for(int i = 0; i < q2.size() - 1;i++){
+            while(q2.size() > 1){
                 q1.push(q2.front());
                 q2.pop();
             }
