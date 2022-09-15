@@ -1,10 +1,11 @@
 class Solution {
 public:
     int calc(vector<int>& weights, int x){
-        int sum = 0;
         int ret = 1;
-        for(int w : weights){
-            if(sum + w > x){
+        int sum = 0;
+        for(int & w : weights){
+            
+            if(sum + w> x){
                 sum = 0;
                 ret += 1;
             }
@@ -13,7 +14,8 @@ public:
         return ret;
     }
     int shipWithinDays(vector<int>& weights, int days) {
-        int left = *max_element(weights.begin(), weights.end()) , right = accumulate(weights.begin(), weights.end(), 0) + 1;
+        int left = *max_element(weights.begin(), weights.end());
+        int right = accumulate(weights.begin(), weights.end(), 0);
         while(left < right){
             int mid = left + (right - left) / 2;
             int t = calc(weights, mid);
