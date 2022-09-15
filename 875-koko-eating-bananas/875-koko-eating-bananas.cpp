@@ -9,7 +9,7 @@ public:
         return ret;
     }
     int minEatingSpeed(vector<int>& piles, int h) {
-        int left = 1, right = *max_element(piles.begin(), piles.end());
+        int left = 1, right = 1000000000+1;
         while(left < right){
             int mid = left + (right - left) / 2;
             int t = calc(piles, mid);
