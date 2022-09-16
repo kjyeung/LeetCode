@@ -7,11 +7,11 @@ public:
     }
     
     void push(int x) {
-        q1.push(x);
+       q1.push(x);
     }
     
     int pop() {
-        int ret;
+        int ret = 0;
         if(q2.empty()){
             ret = q1.back();
             while(q1.size() > 1){
@@ -25,14 +25,16 @@ public:
                 q1.push(q2.front());
                 q2.pop();
             }
+            
+            ret = q2.front();
             q2.pop();
         }
-        
-        return ret;   
+        return ret;
     }
     
     int top() {
-        return q1.empty()? q2.back():q1.back();
+        if(q1.empty()) return q2.back();
+        return q1.back();
     }
     
     bool empty() {
