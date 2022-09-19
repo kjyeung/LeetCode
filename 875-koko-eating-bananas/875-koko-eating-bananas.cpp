@@ -1,15 +1,14 @@
 class Solution {
 public:
-    
     int calc(vector<int>& piles, int x){
         int ret = 0;
-        for(int p : piles){
-            ret += (p + x - 1) / x;
+        for(int &p : piles){
+            ret +=( p + x - 1) / x;
         }
         return ret;
     }
     int minEatingSpeed(vector<int>& piles, int h) {
-        int left = 1, right = 1000000000+1;
+        int left = 1, right = *max_element(piles.begin(), piles.end()) + 1;
         while(left < right){
             int mid = left + (right - left) / 2;
             int t = calc(piles, mid);
@@ -19,6 +18,6 @@ public:
                 right = mid;
             }
         }
-        return right;
+        return left;
     }
 };
