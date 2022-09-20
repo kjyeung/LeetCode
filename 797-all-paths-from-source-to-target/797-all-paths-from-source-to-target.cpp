@@ -13,12 +13,12 @@ public:
         path.push_back(start);
         if(start == end){
             res.push_back(path);
-            path.pop_back();
-            return;
+        }else{
+            for(int next : graph[start]){
+                traverse(next, end, path, graph);
+            }
         }
-        for(int next : graph[start]){
-            traverse(next, end, path, graph);
-        }
+       
         path.pop_back();
         return;
     }    
