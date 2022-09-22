@@ -5,8 +5,8 @@ public:
         int sum = 0;
         for(int & w : weights){
             if(sum + w > x){
-                ret += 1;
                 sum = 0;
+                ++ret;
             }
             sum += w;
         }
