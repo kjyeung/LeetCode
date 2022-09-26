@@ -1,72 +1,56 @@
-struct Node{
-    int key, val;
-    Node* prev, *next;
-    Node(int _key, int _val): key(_key), val(_val), prev(nullptr), next(nullptr){}
-};
 class LRUCache {
-    Node *L, *R;
-    unordered_map<int, Node*> table;
-    int cap;
-    void remove(Node* node){
-        node->prev->next = node->next;
-        node->next->prev = node->prev;
-        node->prev = nullptr;
-        node->next = nullptr;
-        return;
+public:
+    struct Node{
+        int key, value;
+        Node* left, *right;
+        Node(int _key, int _value): key(_key), value(_value), left(NULL), right(NULL){}  
+    }*L, *R;;
+    int n;
+    unordered_map<int, Node*> hash;
+    
+    void remove(Node* p){
+        p->right->left = p->left;
+        p->left->right = p->right;
     }
     
-    void insert(Node* node){
-        node->prev = L;
-        node->next = L->next;
-        L->next->prev = node;
-        L->next = node;
-        return;
+    void insert(Node* p){
+        p->right = L->right;
+        p->left = L;
+        L->right->left = p;
+        L->right = p;
         
     }
-public:
     LRUCache(int capacity) {
-        cap = capacity;
-        
-        L = new Node(-1, -1);
-        R = new Node(-1, -1);
-        L->next = R;
-        R->prev = L;
-        table.clear();
+        n = capacity;
+        L = new Node(-1, -1), R = new Node(-1,-1);
+        L->right = R;
+        R->left = L;
     }
     
     int get(int key) {
-        if(!table.count(key)) return -1;
-        Node* cur = table[key];
-        remove(cur);
-        insert(cur);
-        return cur->val;
+        if(hash.count(key) == 0) return -1;
+        auto p = hash[key];
+        remove(p);
+        insert(p);
+        return p->value;
     }
     
     void put(int key, int value) {
-        if(!table.count(key)){
-            if(table.size() == cap){
-                Node* lru = R->prev;
-                int lruk = lru->key;
-                remove(lru);
-                delete lru;
-                table.erase(lruk);
-            }
-            Node* node = new Node(key, value);
-            table[key] = node;
-            insert(node);
+        if(hash.count(key)){
+            auto p = hash[key];
+            p->value = value;
+            remove(p);
+            insert(p);
         }else{
-            Node* node = table[key];
-            node->val = value;
-            remove(node);
-            insert(node);
+            if(hash.size() == n){
+                auto p = R->left;
+                remove(p);
+                hash.erase(p->key);
+                delete p ;
+            }
+            auto p = new Node(key, value);
+            hash[key] = p;
+            insert(p);
         }
-        return;
     }
 };
-
-/**
- * Your LRUCache object will be instantiated and called as such:
- * LRUCache* obj = new LRUCache(capacity);
- * int param_1 = obj->get(key);
- * obj->put(key,value);
- */
