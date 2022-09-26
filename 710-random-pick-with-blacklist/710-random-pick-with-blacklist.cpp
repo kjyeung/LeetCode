@@ -1,27 +1,28 @@
 class Solution {
-public:
+private:
+    unordered_map<int, int> table;
     int size;
-    unordered_map<int,int> table;
-    std::mt19937 gen;
-    std::uniform_int_distribution<> dis;
+    mt19937 gen;
+    uniform_int_distribution<> dis;
     
+public:
     Solution(int n, vector<int>& blacklist) {
         size = n - blacklist.size();
-        
-        for(int & b : blacklist){
+        int last = n - 1;
+        for(int b : blacklist){
             table[b] = 777;
         }
         
-        int last = n - 1;
-        for(int & b : blacklist){
+        for(int b : blacklist){
             if(b >= size) continue;
             while(table.count(last)) --last;
             table[b] = last--;
         }
         
-        std::random_device rd;
-        gen = std::mt19937(rd());
-        dis = std::uniform_int_distribution<>(0, size - 1);
+        random_device rd;
+        gen = mt19937(rd());
+        dis = uniform_int_distribution<>(0, size - 1);
+        
     }
     
     int pick() {
