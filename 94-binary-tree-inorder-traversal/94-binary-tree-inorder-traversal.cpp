@@ -17,13 +17,12 @@ public:
         while(root){
             if(root->left){
                 pre = root->left;
-                while(pre->right && pre->right != root){
-                    pre = pre->right;
-                }
+                while(pre->right && pre->right != root) pre = pre->right;
                 if(pre->right == root){
-                    pre->right = nullptr;
                     res.push_back(root->val);
-                    root = root->right;
+                    root =root->right;
+                    pre->right = nullptr;
+                    
                 }else{
                     pre->right = root;
                     root = root->left;
