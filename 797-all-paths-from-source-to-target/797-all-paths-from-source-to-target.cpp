@@ -1,25 +1,28 @@
 class Solution {
 public:
-    vector<vector<int>> res;
     vector<vector<int>> allPathsSourceTarget(vector<vector<int>>& graph) {
-        if(graph.empty()) return res;
-        int n = graph.size();
         vector<int> path;
-        traverse(0, n - 1, path, graph);
+        vector<vector<int>> res;
+        path.push_back(0);
+        for(int next: graph[0]){
+            traverse(res, path, graph, next);
+        }
         return res;
+        
     }
     
-    void traverse(int start, int end, vector<int>&path, vector<vector<int>>& graph){
-        path.push_back(start);
-        if(start == end){
+    void traverse(vector<vector<int>>& res, vector<int>& path, vector<vector<int>>& graph, int s){
+        path.push_back(s);
+        if(s == graph.size() - 1){
             res.push_back(path);
+            
         }else{
-            for(int next : graph[start]){
-                traverse(next, end, path, graph);
+            for(int t : graph[s]){
+                traverse(res, path, graph, t);
             }
         }
-       
+        
         path.pop_back();
         return;
-    }    
+    }
 };
