@@ -1,37 +1,33 @@
 class Solution {
 public:
-    struct comp{
-        bool operator()(pair<int, double>& a, pair<int, double>& b){
-            return a.second < b.second;
-        }       
-    };
     double maxProbability(int n, vector<vector<int>>& edges, vector<double>& succProb, int start, int end) {
-        vector<double> probs(n, 0);
-        probs[start] = 1.0;
-        vector<vector<pair<int,double>>> graph(n);
+        vector<vector<tuple<double, int>>> graph(n);
         for(int i = 0; i < edges.size(); i++){
-            int from = edges[i][0];
-            int to = edges[i][1];
+            int a = edges[i][0];
+            int b = edges[i][1];
             double p = succProb[i];
-            graph[from].push_back(make_pair(to, p));
-            graph[to].push_back(make_pair(from, p));
+            graph[a].push_back(make_tuple(p, b));
+            graph[b].push_back(make_tuple(p, a));
         }
         
-        priority_queue<pair<int, double>, vector<pair<int, double>>, comp> pq;
-        pq.push(make_pair(start, 1.0));
+        vector<double> ps(n, 0);
+        ps[start] = 1.0;
+        priority_queue<tuple<double, int>> pq;
+        pq.push(make_tuple(1.0, start));
+        
         while(!pq.empty()){
-            pair<int, double> cur = pq.top();
+            tuple<double, int> cur = pq.top();
             pq.pop();
-            int to = cur.first;
-            double p = cur.second;
+            double p = get<0>(cur);
+            int to = get<1>(cur);
+            if(p < ps[to]) continue;
             if(to == end) return p;
-            if(p < probs[to]) continue;
-            for(pair<int, double> m : graph[to]){
-                int next = m.first;
-                double nextp = probs[to]*m.second;
-                if(nextp > probs[next]){
-                    probs[next] = nextp;
-                    pq.push(make_pair(next, nextp));
+            for(tuple<double, int> t : graph[to]){
+                double np = get<0>(t) * p;
+                int next = get<1>(t);
+                if(np > ps[next]){
+                    ps[next] = np;
+                    pq.push(make_tuple(np,next));
                 }
             }
         }
