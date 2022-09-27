@@ -1,40 +1,41 @@
+class Trie{
+public:
+    int val;
+    Trie* next[26];
+    Trie(){
+        val = 0;
+        memset(next, 0, sizeof(next));
+    }
+};
 class MapSum {
 public:
-    class Trie{
-    public:
-        int val;
-        Trie *next[26];
-        Trie(){
-            val = 0;
-            memset(next, 0, sizeof(next));
-        }
-    };
-    Trie* root;
     unordered_map<string, int> table;
-    
+    Trie* root;
     MapSum() {
         root = new Trie();
-        table.clear();
+        ios_base::sync_with_stdio(false);cin.tie(nullptr);cout.tie(nullptr);
     }
     
     void insert(string key, int val) {
-        int delta = val;
-        if(table.count(key)) delta -= table[key];
         Trie* t = root;
+        int delta = val;
+        if(table.count(key)){
+            delta -= table[key];
+        }
+        table[key] = val;
+        
         for(char c : key){
             c -= 'a';
-            if(t->next[c] == nullptr) t->next[c] = new Trie();
+            if(t->next[c]== nullptr) t->next[c] = new Trie();
             t = t->next[c];
             t->val += delta;
         }
-        table[key] = val;
-        return;
     }
     
     int sum(string prefix) {
         Trie* t = root;
         for(char c : prefix){
-            c-='a';
+            c -= 'a';
             if(t->next[c] == nullptr) return 0;
             t = t->next[c];
         }
