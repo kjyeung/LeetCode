@@ -36,11 +36,7 @@ public:
             if(node->next[c]== nullptr) return false;
             node = node->next[c];
         }
-        bool ret = false;
-        for(int i = 0; i < 26 ;i++){
-            if(node->next[i] != nullptr)  ret = true;
-        }
-        return ret || node->isEnd;
+       return true;
     }
 };
 
