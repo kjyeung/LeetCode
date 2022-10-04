@@ -1,16 +1,15 @@
 class Trie{
-private:
-    bool isEnd;
-    Trie* next[26];
-    string word;
 public:
+    Trie* next[26];
+    bool isEnd;
+    string word;
     Trie(){
         isEnd = false;
-        memset(next, 0 , sizeof(next));
+        memset(next, 0, sizeof(next));
         word = "";
     }
     
-    void insert(const string & word){
+    void insert(string word){
         Trie* node = this;
         for(char c : word){
             c -= 'a';
@@ -21,31 +20,31 @@ public:
         node->word = word;
     }
     
-    string replace(const string & word){
+    string replace(string word){
         Trie* node = this;
         for(char c : word){
             c -= 'a';
+            if(node->isEnd) return node->word;
             if(node->next[c] == nullptr) return word;
             node = node->next[c];
-            if(node->isEnd) return node->word;
         }
-        return node->isEnd? node->word:word;
+        return word;
     }
 };
+
 class Solution {
 public:
     string replaceWords(vector<string>& dictionary, string sentence) {
         Trie* t = new Trie();
-        for(const string & word : dictionary){
+        for(string& word : dictionary){
             t->insert(word);
         }
         
-        stringstream ss(sentence);
-        string res;
+        stringstream input(sentence);
         string tmp;
-        while(ss>>tmp){
-            
-            res += t->replace(tmp) + ' ';
+        string res;
+        while(input >> tmp){
+            res += t->replace(tmp) + " ";
         }
         res.pop_back();
         return res;
