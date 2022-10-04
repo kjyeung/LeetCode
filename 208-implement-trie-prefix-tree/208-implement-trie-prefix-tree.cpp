@@ -1,19 +1,18 @@
 class Trie {
-private:
-    int isEnd;
-    Trie* next[26];
 public:
+    bool isEnd;
+    bool isPrefix;
+    Trie* next[26];
     Trie() {
         isEnd = false;
         memset(next, 0, sizeof(next));
-        ios_base::sync_with_stdio(false);cin.tie(nullptr);cout.tie(nullptr);
     }
     
     void insert(string word) {
         Trie* node = this;
         for(char c : word){
             c -= 'a';
-            if(node->next[c]== nullptr) node->next[c] = new Trie();
+            if(node->next[c] == nullptr) node->next[c] = new Trie();
             node = node->next[c];
         }
         node->isEnd = true;
@@ -23,7 +22,7 @@ public:
         Trie* node = this;
         for(char c : word){
             c -= 'a';
-            if(node->next[c]== nullptr) return false;
+            if(node->next[c] == nullptr) return false;
             node = node->next[c];
         }
         return node->isEnd;
@@ -33,10 +32,14 @@ public:
         Trie* node = this;
         for(char c : prefix){
             c -= 'a';
-            if(node->next[c]== nullptr) return false;
+            if(node->next[c] == nullptr) return false;
             node = node->next[c];
         }
-       return true;
+        if(node->isEnd) return true;
+        for(int i = 0; i < 26;i++){
+            if(node->next[i]) return true;
+        }
+        return false;
     }
 };
 
