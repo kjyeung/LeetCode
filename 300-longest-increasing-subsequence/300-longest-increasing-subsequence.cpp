@@ -1,14 +1,23 @@
 class Solution {
 public:
     int lengthOfLIS(vector<int>& nums) {
-        vector<int> table(nums.size(), 1);
-
-        for(int i = 1; i < table.size(); i++){
-            for(int j = 0; j < i; j++){
-                if(nums[i] > nums[j] && table[i] < table[j] + 1) table[i] = table[j] + 1;
+        vector<int> table;
+        for(int num : nums){
+            if(table.empty()){
+                table.push_back(num);
+                continue;
+            } 
+            int left = 0, right = table.size();
+            while(left < right){
+                int mid = left + (right - left) / 2;
+                if(table[mid] >= num){
+                    right = mid;
+                }else left = mid + 1;
             }
+            if(left == table.size()) table.push_back(num);
+            else table[left] = num;
             
         }
-        return *max_element(table.begin(), table.end());
+        return table.size();
     }
 };
