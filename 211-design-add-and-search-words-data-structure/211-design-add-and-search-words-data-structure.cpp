@@ -1,35 +1,36 @@
 class Trie{
 public:
-    bool isEnd;
     Trie* next[26];
+    bool isEnd;
     Trie(){
-        isEnd = false;
         memset(next, 0, sizeof(next));
+        isEnd = false;
     }
     
     void insert(const string & word){
         Trie* node = this;
         for(char c : word){
             c -= 'a';
-            if(node->next[c]== nullptr) node->next[c] = new Trie();
-            node = node->next[c];
+            if(node->next[c] == nullptr) node->next[c] = new Trie();
+            node= node->next[c];
         }
-        node->isEnd= true;
+        node->isEnd = true;
         return;
     }
     
     bool search(const string & word, int x){
         Trie* node = this;
-        if(x == word.size() ) return node->isEnd;
-        if(word[x] != '.'){
-            Trie* child = node->next[word[x] - 'a'];
-            if(child && child->search(word, x + 1)) return true;
-            else return false;
-        }else{
-            for(int i = 0; i < 26;i++){
+        if(x == word.size()) return node->isEnd;
+        if(word[x] == '.'){
+            bool found = false;
+            for(int i = 0; i < 26; i++){
                 Trie* child = node->next[i];
-                if(child && child->search(word, x + 1)) return true;
+                if(child && child->search(word, x + 1)) found = true;
             }
+            return found;
+        }else{
+            Trie* child  = node->next[word[x] - 'a'];
+            if(child) return child->search(word, x + 1);
             
         }
         return false;
@@ -38,17 +39,18 @@ public:
 };
 class WordDictionary {
 public:
-    Trie* root;
+    Trie* t;
     WordDictionary() {
-        root = new Trie();
+        t = new Trie();
     }
     
     void addWord(string word) {
-        root->insert(word);
+        t->insert(word);
+        return;
     }
     
     bool search(string word) {
-        return root->search(word, 0);
+        return t->search(word, 0);
     }
 };
 
