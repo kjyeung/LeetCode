@@ -2,8 +2,8 @@ class Solution {
 public:
     int calc(vector<int>& piles, int x){
         int ret = 0;
-        for(int &p : piles){
-            ret +=( p + x - 1) / x;
+        for(int p : piles){
+            ret += (p + x - 1) / x;
         }
         return ret;
     }
