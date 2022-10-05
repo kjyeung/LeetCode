@@ -1,74 +1,71 @@
 struct Node{
-    int f, v, k;
-    Node(int _k, int _v, int _f): k(_k), v(_v), f(_f){}
+    int key, val,freq;
+    Node(int _key, int _val, int _freq):key(_key), val(_val), freq(_freq){}
 };
-
 class LFUCache {
-private:
-    int minfreq,cap;
+public:
     unordered_map<int, list<Node>> freqtable;
     unordered_map<int, list<Node>::iterator> keytable;
+    int minf;
+    int cap;
     
-public:
     LFUCache(int capacity) {
-        minfreq = 0;
-        cap = capacity;
         freqtable.clear();
         keytable.clear();
+        minf = 0;
+        cap = capacity;
     }
     
     int get(int key) {
-        if(cap == 0) return -1;
-        if(!keytable.count(key)) return -1;
-        auto nodeiter = keytable[key];
-        int freq = nodeiter->f, value = nodeiter->v;
+        if(cap == 0 || !keytable.count(key)) return -1;
+        auto it = keytable[key];
+        int v = it->val, f = it->freq;
         
-        freqtable[freq].erase(nodeiter);
-        if(freqtable[freq].empty()){
-            freqtable.erase(freq);
-            if(minfreq == freq) ++minfreq;
+        freqtable[f].erase(it);
+        
+        if(freqtable[f].empty()){
+            freqtable.erase(f);
+            if(f == minf) ++minf;
         }
-        if(!freqtable.count(freq + 1)){
-            freqtable[freq + 1] = list<Node>();
-        }
-        freqtable[freq + 1].push_front(Node(key, value, freq + 1));
-        keytable[key] = freqtable[freq + 1].begin();
-        return value;
+        
+        freqtable[f + 1].push_front(Node(key, v, f + 1));
+        keytable[key] = freqtable[f + 1].begin();
+        
+        return v;
     }
     
     void put(int key, int value) {
         if(cap == 0) return;
         if(keytable.count(key)){
-            auto nodeiter = keytable[key];
-            int freq = nodeiter->f;
-            freqtable[freq].erase(nodeiter);
-            if(freqtable[freq].empty()){
-                freqtable.erase(freq);
-                if(minfreq == freq) ++minfreq;
-            }
+            auto it = keytable[key];
+            int f = it->freq;
             
-            //if(!freqtable.count(freq + 1)){
-              //  freqtable[freq + 1] = list<Node>();
-            //}
-            freqtable[freq + 1].push_front(Node(key, value, freq + 1));
-            keytable[key] = freqtable[freq + 1].begin();
+            freqtable[f].erase(it);
+            
+            if(freqtable[f].empty()){
+                freqtable.erase(f);
+                if(f == minf) ++minf;
+            }
+            freqtable[f + 1].push_front(Node(key, value, f + 1));
+            keytable[key] = freqtable[f + 1].begin();
         }else{
             if(keytable.size() == cap){
-                Node lfu = freqtable[minfreq].back();
-                int key = lfu.k, freq = lfu.f;
-                keytable.erase(key);
-                freqtable[freq].pop_back();
-                if(freqtable[freq].empty()){
-                    freqtable.erase(freq);
-                    if(minfreq == freq) ++minfreq;
-                }
+                Node lru = freqtable[minf].back();
+                int k = lru.key;
+                keytable.erase(k);
+                freqtable[minf].pop_back();
                 
+                if(freqtable[minf].empty()){
+                    freqtable.erase(minf);
+                    ++minf;
+                }
             }
-            minfreq = 1;
-            freqtable[1].push_front(Node(key, value, 1));
-            keytable[key] = freqtable[1].begin();
             
+            freqtable[1].push_front(Node(key,value, 1));
+            keytable[key] = freqtable[1].begin();
+            minf = 1;
         }
+        return;
     }
 };
 
