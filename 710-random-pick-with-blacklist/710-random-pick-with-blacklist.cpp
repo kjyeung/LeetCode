@@ -1,10 +1,8 @@
 class Solution {
-private:
-    unordered_map<int, int> table;
-    int size;
     mt19937 gen;
     uniform_int_distribution<> dis;
-    
+    unordered_map<int, int> table;
+    int size;
 public:
     Solution(int n, vector<int>& blacklist) {
         size = n - blacklist.size();
@@ -22,7 +20,6 @@ public:
         random_device rd;
         gen = mt19937(rd());
         dis = uniform_int_distribution<>(0, size - 1);
-        
     }
     
     int pick() {
