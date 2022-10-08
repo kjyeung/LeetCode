@@ -3,11 +3,11 @@ public:
     int calc(vector<int>& weights, int x){
         int ret = 1;
         int sum = 0;
-        for(int & w : weights){
+        for(int w : weights){
             if(sum + w > x){
-                sum = 0;
                 ++ret;
-            }
+                sum = 0;
+            } 
             sum += w;
         }
         return ret;
@@ -19,9 +19,7 @@ public:
             int t = calc(weights, mid);
             if(t > days){
                 left = mid + 1;
-            }else{
-                right = mid;
-            }
+            }else right = mid;
         }
         return left;
     }
