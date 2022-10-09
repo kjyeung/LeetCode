@@ -1,59 +1,46 @@
 class Solution {
 public:
-    int Father[100005];
-    int find(int x){
-        if(Father[x] != x){
-            Father[x] = find(Father[x]);
-        }
-        return Father[x];
-    }
-    
-    void Union(int x, int y){
-        x = Father[x];
-        y = Father[y];
-        if(x < y) Father[y] = x;
-        else Father[x] = y;
-    }
-    
-    vector<pair<int,int>> e[30005];
+    int ans = 0;
+    vector<int> next [30005];
+    vector<int> vals;
     int numberOfGoodPaths(vector<int>& vals, vector<vector<int>>& edges) {
+        this->vals = vals;
         int n = vals.size();
-        int ret = 0;
-        
-        for(int i = 0; i < n; i++){
-            Father[i] = i;
+        for( auto & edge:edges){
+            next[edge[0]].push_back(edge[1]);
+            next[edge[1]].push_back(edge[0]);
         }
+        dfs(0, -1);
+        return ans + n;
+    }
+    
+    map<int,int> dfs(int cur, int parent){
+        map<int,int> count;
+        count[vals[cur]] += 1;
         
-        for(auto& edge :edges){
-            int a = edge[0], b = edge[1];
-            if(vals[a] < vals[b]){
-                swap(a, b);
+        for(int child: next[cur]){
+            if(child == parent) continue;
+            
+            map<int, int> tmp = dfs(child, cur);
+            
+            auto iter = tmp.lower_bound(vals[cur]);
+            tmp.erase(tmp.begin(), iter);
+            
+            if(tmp.size() > count.size()){
+                swap(tmp, count);
             }
-            e[vals[a]].push_back({a, b});
-        }
-        
-        set<int> ValSet(vals.begin(), vals.end());
-        
-        unordered_map<int, vector<int>> val2idx;
-        for(int i = 0; i < n; i++){
-            val2idx[vals[i]].push_back(i);
-        }
-        
-        for(int v : ValSet){
-            for(auto & [v, b] : e[v]){
-                if(find(v) != find(b)) Union(v, b);
-            }
-            unordered_map<int,int> count;
-            for(int idx : val2idx[v]){
-                int root = find(idx);
-                count[root]++;
+            for(auto &[key, freq] : tmp){
+                if(count.find(key)  != count.end()){
+                    ans+=freq * count[key];
+                }
             }
             
-            for(auto& [v, freq]:count){
-                ret += freq * (freq - 1) / 2;
+            for(auto & [key,freq] : tmp){
+                count[key] += freq;
             }
+            
+            
         }
-        return ret + n;
-        
+        return count;
     }
 };
