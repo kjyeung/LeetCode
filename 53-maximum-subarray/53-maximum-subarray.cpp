@@ -1,13 +1,12 @@
 class Solution {
 public:
     int maxSubArray(vector<int>& nums) {
-        int dp0 = nums.front();
-        int dp1 = 0, res = dp0;
-        for(int i = 1; i < nums.size(); i++){
-            dp1 = max(0, dp0) + nums[i];
-            dp0 = dp1;
-            res = max(dp1, res);
+        int pre = 0, res = nums[0];
+        for (const auto &x: nums) {
+            pre = max(pre + x, x);
+            res = max(res, pre);
         }
         return res;
+
     }
 };
