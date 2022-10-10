@@ -3,25 +3,19 @@ public:
     vector<vector<int>> res;
     vector<vector<int>> permute(vector<int>& nums) {
         int n = nums.size();
-        vector<int> track;
-        vector<bool> used(n);
-        backtrack(nums, track ,used);
+        bt(nums, 0, n);
         return res;
     }
     
-    void backtrack(vector<int>& nums, vector<int>& track, vector<bool>& used){
-        if(track.size() == nums.size()){
-            res.push_back(track);
-            return;
+    void bt(vector<int>& nums, int left ,int right){
+        if(left == right){
+            res.push_back(nums);
         }
         
-        for(int i = 0; i < nums.size(); i++){
-            if(used[i]) continue;
-            track.push_back(nums[i]);
-            used[i] = true;
-            backtrack(nums, track, used);
-            track.pop_back();
-            used[i] = false;
+        for(int i = left; i < right ;i++){
+            swap(nums[left],nums[i]);
+            bt(nums, left + 1, right);
+            swap(nums[left], nums[i]);
         }
         return;
     }
