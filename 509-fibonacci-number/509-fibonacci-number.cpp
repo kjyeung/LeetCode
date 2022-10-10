@@ -2,12 +2,14 @@ class Solution {
 public:
     int fib(int n) {
         if(n <= 1) return n;
-        int s1 = 0, s2 = 1, sum;
-        for(int i = 1; i<n;i++){
-            sum = s1 + s2;
-            s1 = s2;
-            s2 = sum;
+        int d1 = 0;
+        int d2 = 1;
+        int ret = 0;
+        for(int i = 1; i < n; i++){
+            ret = d1 + d2;
+            d1 = d2;
+            d2 = ret;
         }
-        return sum;
+        return ret;
     }
 };
