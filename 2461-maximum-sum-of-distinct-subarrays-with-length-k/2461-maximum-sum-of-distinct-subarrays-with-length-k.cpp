@@ -1,34 +1,36 @@
 class Solution {
 public:
     long long maximumSubarraySum(vector<int>& nums, int k) {
-        long long ret = 0, sum = 0;
-        unordered_map<int,int> table;
         int n = nums.size();
-        
-        int left = 0;
-        for(int i  = 0; i < n; i++){
-           if(table.count(nums[i])){
-               int idx = table[nums[i]];
-               for(int j = left; j <= idx; j++){
-                   table.erase(nums[j]);
-                   sum -= nums[j];
-               }
-               left = idx + 1;
-               table[nums[i]] = i;
-               sum += nums[i];
-           }else{
-               if(table.size() == k){
-                   sum -= nums[left];
-                   table.erase(nums[left]);
-                   ++left;
-               }
-               table[nums[i]]  = i;
-               sum += nums[i];
-               
-           }
-           if(table.size() == k) ret = max(ret, sum);
+        int mx = *(max_element(nums.begin(), nums.end()));
+        vector<int> count(mx + 1);
+        int dupCount = 0;
+        int64_t sum = 0;
+        int len = 0;
+        int64_t ret = 0;
+        for (int i = 0; i < n; ++i) {
+            int num = nums[i];
+            sum += num;
+            count[num] += 1;
+            if (count[num] == 2) {
+                dupCount += 1;
+            }
+            len += 1;
+            
+            if (len == k + 1) {
+                int oldNum = nums[i - k];
+                sum -= oldNum;
+                count[oldNum] -= 1;
+                if (count[oldNum] == 1) {
+                    dupCount -= 1;
+                }
+                len -= 1;
+            }
+            
+            if (len == k && dupCount == 0) {
+                ret = max(ret, sum);
+            }
         }
         return ret;
-        
     }
 };
