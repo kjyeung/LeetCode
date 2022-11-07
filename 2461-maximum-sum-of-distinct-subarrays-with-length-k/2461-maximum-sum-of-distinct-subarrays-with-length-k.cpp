@@ -5,24 +5,28 @@ public:
         unordered_map<int,int> table;
         int n = nums.size();
         
-        int left = 0, right = 0;
-        
-        while(right < n){
-            long long cur = nums[right];
-            table[cur] += 1;
-            sum += cur;
-            ++right;
-            while(table[cur] > 1 || right - left > k){
-                long long pop = nums[left];
-                sum -= pop;
-                --table[nums[left]];
-                ++left;
-            }
-            if(right - left == k){
-                ret = max(ret, sum);
-            }
-            
-            
+        int left = 0;
+        for(int i  = 0; i < n; i++){
+           if(table.count(nums[i])){
+               int idx = table[nums[i]];
+               for(int j = left; j <= idx; j++){
+                   table.erase(nums[j]);
+                   sum -= nums[j];
+               }
+               left = idx + 1;
+               table[nums[i]] = i;
+               sum += nums[i];
+           }else{
+               if(table.size() == k){
+                   sum -= nums[left];
+                   table.erase(nums[left]);
+                   ++left;
+               }
+               table[nums[i]]  = i;
+               sum += nums[i];
+               
+           }
+           if(table.size() == k) ret = max(ret, sum);
         }
         return ret;
         
