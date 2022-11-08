@@ -3,35 +3,23 @@ public:
     long long totalCost(vector<int>& costs, int k, int candidates) {
         long long ret = 0;
         int n = costs.size();
-        priority_queue<tuple<int,int>, vector<tuple<int,int>>,greater<tuple<int,int>>> pq;
-        int left = min(candidates - 1, n / 2 - 1);
-        int right = max(n / 2, n - candidates);
-        
-        for(int i = 0; i <=left;i++){
-            pq.push(make_tuple(costs[i], 1));
-        }
-        for(int i = n - 1; i >= right;i-- ){
-            pq.push(make_tuple(costs[i], 2));
-        }
-        
-        for(int i = 0; i < k;i++){
-            auto cur = pq.top();
-            pq.pop();
-            long long cost = get<0>(cur);
-            ret += cost;
-            int place = get<1>(cur);
-            if(left < right - 1 ){
-                if(place == 1){
-                    ++left;
-                    pq.push(make_tuple(costs[left], place));
-                }else{
-                    --right;
-                    pq.push(make_tuple(costs[right], place));
-                }
+        priority_queue<int, vector<int>, greater<int>> pq1, pq2;
+        int i = 0, j = n - 1, count = 0; 
+        while(count < k){
+            while(pq1.size() < candidates && i <=j) pq1.push(costs[i++]);
+            while(pq2.size() < candidates && i <=j) pq2.push(costs[j--]);
+            int a = pq1.empty()? INT_MAX:pq1.top();
+            int b = pq2.empty()? INT_MAX:pq2.top();
+            if(a <= b){
+                ret += a;
+                pq1.pop();
+            }else{
+                ret += b;
+                pq2.pop();
             }
+            ++count;
             
         }
-        
         return ret;
     }
 };
