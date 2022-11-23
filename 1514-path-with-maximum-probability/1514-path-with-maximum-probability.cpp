@@ -1,7 +1,7 @@
 class Solution {
 public:
     double maxProbability(int n, vector<vector<int>>& edges, vector<double>& succProb, int start, int end) {
-        priority_queue<tuple<double, int>, vector<tuple<double, int>>, less<tuple<double, int>>> pq;
+        priority_queue<tuple<double, int>> pq;
         
         vector<vector<tuple<double, int>>> graph(n);
         for(int i = 0; i < edges.size(); i++){
