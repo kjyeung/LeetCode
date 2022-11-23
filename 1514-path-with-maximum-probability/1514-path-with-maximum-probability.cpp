@@ -1,9 +1,9 @@
 class Solution {
 public:
     double maxProbability(int n, vector<vector<int>>& edges, vector<double>& succProb, int start, int end) {
-        priority_queue<tuple<double, int>> pq;
+        priority_queue<pair<double, int>> pq;
         
-        vector<vector<tuple<double, int>>> graph(n);
+        vector<vector<pair<double, int>>> graph(n);
         for(int i = 0; i < edges.size(); i++){
             int a = edges[i][0];
             int b = edges[i][1];
@@ -18,13 +18,13 @@ public:
         while(!pq.empty()){
             auto cur = pq.top();
             pq.pop();
-            double p = get<0>(cur);
-            int to = get<1>(cur);
+            double p = cur.first;
+            int to = cur.second;
             if(to == end) return p;
             if(p < dis[to]) continue;
             for(auto e : graph[to]){
-                int next = get<1>(e);
-                double newp = p * get<0>(e);
+                int next = e.second;
+                double newp = p * e.first;
                 if(newp > dis[next]){
                     dis[next] = newp;
                     pq.push({newp, next});
