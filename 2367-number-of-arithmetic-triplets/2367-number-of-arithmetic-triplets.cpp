@@ -1,12 +1,16 @@
 class Solution {
 public:
     int arithmeticTriplets(vector<int>& nums, int diff) {
-        int cnt[201] = {}, res = 0;
-        for (auto n : nums) {
-            if (n >= 2 * diff)
-                res += cnt[n - diff] && cnt[n - 2 * diff];
-            cnt[n] = true;
+        int res = 0;
+        for(int i = 0; i < nums.size() - 2; i++){
+            for(int j = i + 1; j < nums.size() - 1; j++){
+                if(nums[j] - nums[i] != diff) continue;
+                for(int k = j + 1; k < nums.size(); k++){
+                    if(nums[k] - nums[j] == diff) ++res;
+                }
+            }
         }
         return res;
+        
     }
 };
