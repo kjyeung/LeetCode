@@ -1,65 +1,66 @@
-struct Node{
-    int key;
-    int val;
+class Node{
+public:
+    int key, value;
     Node* prev, *next;
-    Node(int _k, int _v):key(_k), val(_v), prev(NULL), next(NULL){}
+    Node(int _k, int _v): key(_k), value(_v), prev(NULL), next(NULL){}
 };
 class LRUCache {
-private:
-    Node* L, *R;
-    unordered_map<int ,Node*> table;
-    int cap;
-    
-    void remove(Node* cur){
-        cur->next->prev = cur->prev;
-        cur->prev->next = cur->next;
-        return;
-    }
-    
-    void insert(Node* cur){
-        L->next->prev = cur;
-        cur->next = L->next;
-        cur->prev = L;
-        L->next = cur;
-        return;
-    }
 public:
+    unordered_map<int,Node*> table;
+    Node *L, *R;
+    int cap;
     LRUCache(int capacity) {
+        ios_base::sync_with_stdio(false);cin.tie(nullptr);cout.tie(nullptr);
+        cap = capacity;
+        table.clear();
         L = new Node(-1, -1);
         R = new Node(-1, -1);
         L->next = R;
         R->prev = L;
-        table.clear();
-        cap = capacity;
     }
     
+    void remove(Node* p){
+        p->next->prev = p->prev;
+        p->prev->next = p->next;
+        return;
+    }
+    void insert(Node* p){
+        L->next->prev = p;
+        p->next = L->next;
+        L->next = p;
+        p->prev = L;
+        return;
+    }
     int get(int key) {
-        if(table.find(key) == table.end()) return -1;
-        Node* cur = table[key];
+        
+        if(!table.count(key)) return -1;
+        Node *cur = table[key];
         remove(cur);
         insert(cur);
-        return cur->val;
+        return cur->value; 
+        
     }
     
     void put(int key, int value) {
-        if(table.find(key) != table.end()){
+        if(table.count(key)){
             Node* cur = table[key];
-            cur->val = value;
+            cur->value = value;
             remove(cur);
             insert(cur);
         }else{
             if(table.size() == cap){
                 Node* lru = R->prev;
-                int k = lru->key;
-                
+                int lruk = lru->key;
+                table.erase(lruk);
                 remove(lru);
-                table.erase(k);
                 delete lru;
             }
             Node* cur = new Node(key, value);
-            insert(cur);
             table[key] = cur;
+            insert(cur);
         }
+        return;
+        
     }
 };
 
