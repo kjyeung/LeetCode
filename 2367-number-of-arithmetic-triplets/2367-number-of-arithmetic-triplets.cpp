@@ -2,13 +2,10 @@ class Solution {
 public:
     int arithmeticTriplets(vector<int>& nums, int diff) {
         int res = 0;
-        for(int i = 0; i < nums.size() - 2; i++){
-            for(int j = i + 1; j < nums.size() - 1; j++){
-                if(nums[j] - nums[i] != diff) continue;
-                for(int k = j + 1; k < nums.size(); k++){
-                    if(nums[k] - nums[j] == diff) ++res;
-                }
-            }
+        vector<bool> table(201, false);
+        for(int i = 0; i < nums.size(); i++){
+            table[nums[i]] = true;
+            if(nums[i] >= diff * 2 && table[nums[i] - diff] && table[nums[i] - diff * 2]) ++ res;
         }
         return res;
         
