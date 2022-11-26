@@ -11,25 +11,26 @@
  */
 class Solution {
 public:
+    vector<int> nums;
     vector<vector<int>> closestNodes(TreeNode* root, vector<int>& queries) {
-        vector<int> nums;
-        flatten(root, nums);
+        flatten(root);
         vector<vector<int>> res;
-        for(int q : queries){
-            auto left = lower_bound(nums.begin(), nums.end(), q);
-            if(left != nums.end() && *left == q) res.push_back({q, q});
-            else if(left == nums.end()) res.push_back({nums.back(), -1});
-            else if(left == nums.begin()) res.push_back({-1, nums.front()});
-            else res.push_back({*prev(left), *left});
+        for(int & q : queries){
+            auto it = lower_bound(nums.begin(), nums.end(), q);
+            if(it != nums.end() && *it == q){
+                res.push_back({q, q});
+            }else{
+                res.push_back({it == nums.begin()? -1 : *prev(it), it == nums.end()? -1 : *it});
+            }
         }
         return res;
         
     }
-    void flatten(TreeNode* root, vector<int>& nums){
+    void flatten(TreeNode* root){
         if(root == nullptr) return;
-        flatten(root->left, nums);
+        flatten(root->left);
         nums.push_back(root->val);
-        flatten(root->right, nums);
+        flatten(root->right);
         return;
     }
 };
