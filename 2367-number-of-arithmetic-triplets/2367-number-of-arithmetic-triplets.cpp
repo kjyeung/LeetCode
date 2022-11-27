@@ -5,9 +5,11 @@ public:
         vector<bool> table(201, false);
         for(int i = 0; i < nums.size(); i++){
             table[nums[i]] = true;
-            if(nums[i] >= diff * 2 && table[nums[i] - diff] && table[nums[i] - diff * 2]) ++ res;
+            if(nums[i] < 2 *diff) continue;
+            if(table[nums[i] - diff] && table[nums[i]-2*diff]) ++res;
         }
         return res;
+        
         
     }
 };
