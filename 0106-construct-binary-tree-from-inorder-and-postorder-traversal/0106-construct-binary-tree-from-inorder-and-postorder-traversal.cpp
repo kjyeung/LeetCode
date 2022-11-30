@@ -11,22 +11,28 @@
  */
 class Solution {
 public:
-    unordered_map<int,int> intable;
     TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
-        int n = inorder.size();
-        for(int i = 0; i < inorder.size();i++){
-            intable[inorder[i]] = i;
+        TreeNode* root = new TreeNode(postorder.back());
+        stack<TreeNode*> stk;
+        stk.push(root);
+        int n = postorder.size();
+        int idx = n -1;
+        for(int i = n - 2; i >=0;i--){
+            TreeNode* cur = stk.top();
+            int postval = postorder[i];
+            if(cur->val != inorder[idx]){
+                cur->right = new TreeNode(postval);
+                stk.push(cur->right);
+            }else{
+                while(!stk.empty() && stk.top()->val == inorder[idx]){
+                    cur = stk.top();
+                    stk.pop();
+                    --idx;
+                }
+                cur->left = new TreeNode(postval);
+                stk.push(cur->left);
+            }
         }
-        return bt(inorder, 0, n - 1, postorder, 0, n - 1);
-    }
-    TreeNode* bt(vector<int>& inorder, int inleft ,int inright, vector<int>& postorder, int postleft, int postright){
-        if(inleft > inright || postleft > postright) return nullptr;
-        int rootval = postorder[postright];
-        TreeNode* root = new TreeNode(rootval);
-        int inroot = intable[rootval];
-        int leftsize = inroot - inleft - 1;
-        root->left = bt(inorder, inleft, inroot - 1, postorder, postleft, postleft + leftsize);
-        root->right =bt(inorder, inroot + 1, inright, postorder, postleft + leftsize + 1, postright - 1);
         return root;
     }
 };
