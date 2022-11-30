@@ -12,24 +12,25 @@
 class Solution {
 public:
     TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
-        TreeNode* root = new TreeNode(preorder[0]);
+        if(preorder.empty()) return nullptr;
+        TreeNode *root = new TreeNode(preorder[0]);
         stack<TreeNode*> stk;
         stk.push(root);
         int idx = 0;
+        
         for(int i = 1; i < preorder.size(); i++){
-            int preval = preorder[i];
-            TreeNode* node = stk.top();
-            if(node->val != inorder[idx]){
-                node->left = new TreeNode(preval);
-                stk.push(node->left);
+            TreeNode* cur = stk.top();
+            if(cur->val != inorder[idx]){
+                cur->left = new TreeNode(preorder[i]);
+                stk.push(cur->left);
             }else{
                 while(!stk.empty() && stk.top()->val == inorder[idx]){
-                    node = stk.top();
+                    cur = stk.top();
                     stk.pop();
                     ++idx;
                 }
-                node->right = new TreeNode(preval);
-                stk.push(node->right);
+                cur->right = new TreeNode(preorder[i]);
+                stk.push(cur->right);
             }
         }
         return root;
