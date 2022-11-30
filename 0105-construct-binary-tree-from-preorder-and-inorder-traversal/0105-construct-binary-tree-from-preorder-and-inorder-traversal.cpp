@@ -12,23 +12,27 @@
 class Solution {
 public:
     TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
-        return bt(preorder, 0, preorder.size() - 1, inorder, 0, inorder.size() - 1);
-    }
-    TreeNode* bt(vector<int>&preorder, int preleft, int preright, vector<int>& inorder, int inleft, int inright){
-        if(preleft > preright || inleft > inright) return nullptr;
-        int rootval = preorder[preleft];
-        int inroot = inleft;
-        for(int i = inleft; i <= inright; i++){
-           if(inorder[i] == rootval){
-               inroot = i;
-               break;
-           }
+        TreeNode* root = new TreeNode(preorder[0]);
+        stack<TreeNode*> stk;
+        stk.push(root);
+        int idx = 0;
+        for(int i = 1; i < preorder.size(); i++){
+            int preval = preorder[i];
+            TreeNode* node = stk.top();
+            if(node->val != inorder[idx]){
+                node->left = new TreeNode(preval);
+                stk.push(node->left);
+            }else{
+                while(!stk.empty() && stk.top()->val == inorder[idx]){
+                    node = stk.top();
+                    stk.pop();
+                    ++idx;
+                }
+                node->right = new TreeNode(preval);
+                stk.push(node->right);
+            }
         }
-        int leftsize = inroot - inleft;
-        TreeNode* ret = new TreeNode(rootval);
-        ret->left= bt(preorder, preleft + 1, preleft + leftsize, inorder, inleft, inroot - 1);
-        ret->right = bt(preorder, preleft + leftsize+1, preright, inorder, inroot+1, inright) ;
+        return root;
         
-        return ret;
     }
 };
