@@ -11,16 +11,22 @@
  */
 class Solution {
 public:
-    int preidx = 0, postidx = 0;
     TreeNode* constructFromPrePost(vector<int>& preorder, vector<int>& postorder) {
-        TreeNode* root = new TreeNode(preorder[preidx++]);
-        if(root->val != postorder[postidx]){
-            root->left = constructFromPrePost(preorder, postorder);
+        TreeNode* root = new TreeNode(preorder.front());
+        stack<TreeNode*> stk;
+        stk.push(root);
+        int idx = 0;
+        for(int i = 1; i < preorder.size(); i++){
+            TreeNode* cur = new TreeNode(preorder[i]);
+            while(stk.top()->val == postorder[idx]){
+                stk.pop();
+                ++idx;
+            }
+            if(stk.top()->left == nullptr) stk.top()->left = cur;
+            else stk.top()->right = cur;
+            stk.push(cur);
         }
-        if(root->val != postorder[postidx]){
-            root->right = constructFromPrePost(preorder, postorder);
-        }
-        ++postidx;
         return root;
+        
     }
 };
