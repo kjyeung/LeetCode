@@ -12,17 +12,17 @@
 class Solution {
 public:
     TreeNode* constructFromPrePost(vector<int>& preorder, vector<int>& postorder) {
-        TreeNode* root = new TreeNode(preorder.front());
+        TreeNode* root = new TreeNode(preorder[0]);
         stack<TreeNode*> stk;
         stk.push(root);
         int idx = 0;
-        for(int i = 1; i < preorder.size(); i++){
+        for(int i = 1; i < preorder.size();i++){
             TreeNode* cur = new TreeNode(preorder[i]);
             while(stk.top()->val == postorder[idx]){
                 stk.pop();
                 ++idx;
             }
-            if(stk.top()->left == nullptr) stk.top()->left = cur;
+            if(stk.top()->left==nullptr) stk.top()->left = cur;
             else stk.top()->right = cur;
             stk.push(cur);
         }
