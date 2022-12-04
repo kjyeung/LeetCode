@@ -6,12 +6,12 @@ public:
         int ret = 0;
         long long mad = rightsum;
         int n = nums.size();
-        for(long long i = 0; i < nums.size();i++){
+        for(int i = 0; i < nums.size();i++){
             leftsum += (long long)nums[i];
             rightsum -= (long long)nums[i];
-            long long tmp;
+            int tmp;
             if(i < n - 1){
-                tmp = llabs(leftsum / (i+1) - rightsum/(n - i - 1));
+                tmp = abs(leftsum / (i+1) - rightsum/(n - i - 1));
             }else tmp = leftsum / (i + 1);
             if(tmp < mad){
                 mad = tmp;
