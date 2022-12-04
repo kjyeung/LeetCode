@@ -1,8 +1,8 @@
 class Solution {
 public:
     int minimumAverageDifference(vector<int>& nums) {
-        long long leftsum = 0, rightsum = 0;
-        for(long long num : nums) rightsum += num;
+        long long rightsum = accumulate(nums.begin(), nums.end(), (long long)0);
+        long long leftsum = 0;
         int ret = 0;
         long long mad = rightsum;
         int n = nums.size();
