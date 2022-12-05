@@ -15,23 +15,23 @@ public:
         TreeNode* root = new TreeNode(postorder.back());
         stack<TreeNode*> stk;
         stk.push(root);
-        int idx = inorder.size() - 1;
-        for(int i = postorder.size() - 2; i>=0; i--){
+        int n = postorder.size();
+        int idx = n - 1;
+        for(int i = n - 2; i>=0;--i ){
             TreeNode* cur = stk.top();
+            TreeNode* node = new TreeNode(postorder[i]);
             if(cur->val != inorder[idx]){
-                cur->right = new TreeNode(postorder[i]);
-                stk.push(cur->right);
+                cur->right = node;
             }else{
                 while(!stk.empty() && stk.top()->val == inorder[idx]){
                     cur = stk.top();
                     stk.pop();
                     --idx;
                 }
-                cur->left= new TreeNode(postorder[i]);
-                stk.push(cur->left);
+                cur->left = node;
             }
+            stk.push(node);
         }
-        
         return root;
         
     }
