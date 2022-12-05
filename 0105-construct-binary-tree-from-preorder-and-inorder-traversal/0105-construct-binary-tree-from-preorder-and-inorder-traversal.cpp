@@ -16,20 +16,20 @@ public:
         stack<TreeNode*> stk;
         stk.push(root);
         int idx = 0;
-        for(int i = 1; i< preorder.size(); i++){
+        for(int i = 1; i < preorder.size();i++){
             TreeNode* cur = stk.top();
-            if(cur->val!=inorder[idx]){
-                cur->left = new TreeNode(preorder[i]);
-                stk.push(cur->left);
+            TreeNode* node = new TreeNode(preorder[i]);
+            if(cur->val != inorder[idx]){
+                cur->left = node;
             }else{
                 while(!stk.empty() && stk.top()->val == inorder[idx]){
                     cur = stk.top();
                     stk.pop();
                     ++idx;
                 }
-                cur->right = new TreeNode(preorder[i]);
-                stk.push(cur->right);
+                cur->right = node;
             }
+            stk.push(node);
         }
         return root;
         
