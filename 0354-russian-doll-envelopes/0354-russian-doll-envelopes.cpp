@@ -1,30 +1,25 @@
-struct comp{
-    bool operator()(vector<int>& a, vector<int>&b){
-        if(a[0] < b[0]) return true;
-        if(a[0] == b[0]) return a[1] >= b[1];
-        return false;
-    }
-};
 class Solution {
 public:
     int maxEnvelopes(vector<vector<int>>& envelopes) {
-        sort(envelopes.begin(), envelopes.end(), comp());
+        sort(envelopes.begin(), envelopes.end(), [](const vector<int>& a, const vector<int>& b){
+           return a[0]<b[0]  || (a[0] ==b[0] && a[1] >b[1]);
+        });
+        
         vector<int> tmp;
-        for(vector<int>& e : envelopes){
-            if(tmp.empty()){
-                tmp.push_back(e[1]);
-                continue;
+        for(const vector<int>& e : envelopes){
+            int v = e[1];
+            if(tmp.empty()) tmp.push_back(v);
+            else{
+                int left = 0, right = tmp.size(); 
+                while(left < right){
+                    int mid = left + (right - left) / 2;
+                    if(tmp[mid] > v) right = mid;
+                    else if(tmp[mid] < v) left = mid + 1;
+                    else right = mid;
+                }
+                if(left == tmp.size()) tmp.push_back(v);
+                else tmp[left] = v;
             }
-            int left = 0, right = tmp.size();
-            while(left < right){
-                int mid = left + (right - left) / 2;
-                if(tmp[mid]>e[1]){
-                    right = mid;
-                }else if(tmp[mid] == e[1])right = mid;
-                else left = mid + 1;
-            }
-            if(left == tmp.size()) tmp.push_back(e[1]);
-            tmp[left] = e[1];
         }
         return tmp.size();
         
