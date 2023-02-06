@@ -13,17 +13,17 @@ class Solution {
 public:
     TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
         if(preorder.empty()) return nullptr;
-        stack<TreeNode*> stk;
         TreeNode* root = new TreeNode(preorder[0]);
+        stack<TreeNode*> stk;
         stk.push(root);
         int idx = 0;
-        for(int i = 1; i < preorder.size();i++){
+        for(int i = 1 ; i< preorder.size();i++){
             TreeNode* node = new TreeNode(preorder[i]);
             TreeNode* cur = stk.top();
             if(cur->val != inorder[idx]){
                 cur->left = node;
             }else{
-                while(!stk.empty() && stk.top()->val==inorder[idx]){
+                while(!stk.empty()&& stk.top()->val == inorder[idx]){
                     cur = stk.top();
                     stk.pop();
                     ++idx;
@@ -33,5 +33,6 @@ public:
             stk.push(node);
         }
         return root;
+        
     }
 };
