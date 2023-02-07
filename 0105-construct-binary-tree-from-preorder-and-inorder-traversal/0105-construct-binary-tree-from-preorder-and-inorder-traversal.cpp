@@ -17,13 +17,13 @@ public:
         stack<TreeNode*> stk;
         stk.push(root);
         int idx = 0;
-        for(int i = 1 ; i< preorder.size();i++){
-            TreeNode* node = new TreeNode(preorder[i]);
+        for(int i = 1; i < preorder.size();i++){
             TreeNode* cur = stk.top();
+            TreeNode* node = new TreeNode(preorder[i]);
             if(cur->val != inorder[idx]){
                 cur->left = node;
             }else{
-                while(!stk.empty()&& stk.top()->val == inorder[idx]){
+                while(!stk.empty() && stk.top()->val == inorder[idx]){
                     cur = stk.top();
                     stk.pop();
                     ++idx;
@@ -33,6 +33,5 @@ public:
             stk.push(node);
         }
         return root;
-        
     }
 };
